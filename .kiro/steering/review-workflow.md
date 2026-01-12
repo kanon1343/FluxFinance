@@ -178,3 +178,96 @@ inclusion: always
 - #[[file:.kiro/steering/code-review-prompt.md]] - レビュー基準とスコアリング
 - #[[file:.kiro/steering/nextjs-react-guidelines-2026.md]] - 技術ガイドライン
 - #[[file:.kiro/specs/flux-finance/tasks.md]] - タスク一覧
+
+---
+
+## コミットルール
+
+### コミットメッセージ形式
+
+```
+<type>: <subject> (タスクX.Y)
+
+<body>
+
+<footer>
+```
+
+### Type 一覧
+
+| Type     | 説明                 | 例                     |
+| -------- | -------------------- | ---------------------- |
+| feat     | 新機能追加           | feat: StockCard 実装   |
+| fix      | バグ修正             | fix: API エラー修正    |
+| refactor | リファクタリング     | refactor: 型定義整理   |
+| test     | テスト追加・修正     | test: E2E テスト追加   |
+| docs     | ドキュメント更新     | docs: README 更新      |
+| style    | コードスタイル修正   | style: Biome 適用      |
+| perf     | パフォーマンス改善   | perf: キャッシュ最適化 |
+| build    | ビルド設定変更       | build: 依存関係更新    |
+| ci       | CI/CD 設定変更       | ci: GitHub Actions     |
+| chore    | その他のメンテナンス | chore: 設定ファイル    |
+
+### Subject ルール
+
+- 50 文字以内
+- 動詞で始める（実装、追加、修正、更新）
+- 句読点なし
+- タスク番号を含める（例：タスク 4.2）
+
+### Body ルール
+
+- 変更内容の詳細を箇条書きで記載
+- 「何を」「なぜ」を明確に
+- レビュースコアを含める（承認の場合）
+
+### Footer ルール
+
+- Breaking Changes: 破壊的変更がある場合
+- Closes: 関連 Issue 番号
+- Reviewed-by: レビュアー情報
+
+### コミット例
+
+```bash
+# 機能実装完了時
+git commit -m "feat: StockCard コンポーネント実装完了 (タスク4.2)
+
+- 銘柄情報表示カードの作成
+- 価格変動の色分け表示（緑/赤）
+- カードクリックイベントハンドリング
+- Tailwind CSS によるレスポンシブデザイン
+
+レビュースコア: 85/100点 ✅承認"
+
+# バグ修正時
+git commit -m "fix: API エラーハンドリング改善 (タスク2.1)
+
+- Yahoo Finance API のタイムアウト処理追加
+- エラーレスポンスの型安全性向上
+- フォールバック値の設定
+
+Closes #123"
+
+# リファクタリング時
+git commit -m "refactor: 型定義の整理とコード重複解消 (タスク6.1)
+
+- YahooFinance 型定義を統一
+- actions.ts の any 型を削除
+- 共通ユーティリティ関数の抽出
+
+レビュースコア: 90/100点 ✅承認"
+```
+
+### チェックポイント時のコミット
+
+```bash
+git commit -m "checkpoint: API Routes 動作確認完了 (タスク3)
+
+- E2E テスト 11 件すべてパス
+- Market API: 4つのデフォルトティッカー対応
+- History API: 時間範囲別キャッシュ設定
+- 型安全性とエラーハンドリング確認済み
+
+次のフェーズ: コア UI コンポーネント実装"
+```
