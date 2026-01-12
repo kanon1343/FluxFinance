@@ -8,6 +8,15 @@ export interface StockData {
   lastUpdate?: Date;
 }
 
+export interface TickerItem {
+  symbol: string;
+  displayName: string;
+  price: number;
+  change: number;
+  changePercent: number;
+  currency: string;
+}
+
 export interface ChartDataPoint {
   timestamp: number;
   open: number;
@@ -17,4 +26,4 @@ export interface ChartDataPoint {
   volume: number;
 }
 
-export type TimeRange = '1D' | '1W' | '1M' | '3M';
+export type TimeRange = "1D" | "1W" | "1M" | "3M";

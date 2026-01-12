@@ -45,16 +45,16 @@ FluxFinance ダッシュボードを Next.js App Router、TypeScript、Tailwind 
   - すべてのテストが通ることを確認し、質問があれば聞いてください。
   - ✅ E2E テスト 11 件すべてパス（Playwright 使用）
 
-- [ ] 4. コア UI コンポーネントの実装
+- [x] 4. コア UI コンポーネントの実装
 
-  - [ ] 4.1 基本レイアウトとヘッダーコンポーネント
+  - [x] 4.1 基本レイアウトとヘッダーコンポーネント
 
     - アプリケーションヘッダーの実装（アプリ名、最終更新時刻）
     - レスポンシブレイアウトの基盤作成
     - Tailwind CSS によるスタイリング
     - _Requirements: 8.1, 5.1, 5.2_
 
-  - [ ] 4.2 StockCard コンポーネントの実装
+  - [x] 4.2 StockCard コンポーネントの実装
 
     - 銘柄情報表示カードの作成
     - 価格変動の色分け表示（緑/赤）
@@ -68,7 +68,7 @@ FluxFinance ダッシュボードを Next.js App Router、TypeScript、Tailwind 
     - **Property 14: UI Component Organization**
     - **Validates: Requirements 1.3, 1.4, 1.5, 8.2**
 
-  - [ ] 4.4 MarketTicker コンポーネントの実装
+  - [x] 4.4 MarketTicker コンポーネントの実装
     - 画面上部のティッカー表示
     - 自動スクロール機能
     - リアルタイム更新対応
