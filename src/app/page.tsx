@@ -1,35 +1,43 @@
-export default function Home() {
+import { Dashboard } from "@/components";
+import { DEFAULT_TICKERS } from "@/constants";
+import type { StockData } from "@/types";
+
+interface MarketResponse {
+  data: StockData[];
+  lastUpdate: string;
+  error?: string;
+}
+
+async function getInitialMarketData(): Promise<MarketResponse | null> {
+  try {
+    const baseUrl = process.env.VERCEL_URL
+      ? `https://${process.env.VERCEL_URL}`
+      : "http://localhost:3000";
+
+    const response = await fetch(
+      `${baseUrl}/api/market?tickers=${DEFAULT_TICKERS.join(",")}`,
+      {
+        next: { revalidate: 30 },
+      }
+    );
+
+    if (!response.ok) {
+      return null;
+    }
+
+    return response.json();
+  } catch {
+    return null;
+  }
+}
+
+export default async function Home() {
+  const initialData = await getInitialMarketData();
+
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4">
-            <h1 className="text-2xl font-bold text-gray-900">FluxFinance</h1>
-            <div className="text-sm text-gray-500">
-              最終更新: {new Date().toLocaleString('ja-JP')}
-            </div>
-          </div>
-        </div>
-      </header>
-
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="text-center">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">
-            株価監視ダッシュボード
-          </h2>
-          <p className="text-lg text-gray-600 mb-8">
-            GRRR、S&P500、日経平均、USD/JPYの価格情報をリアルタイムで監視
-          </p>
-
-          <div className="bg-white rounded-lg shadow p-6">
-            <p className="text-gray-500">
-              プロジェクトセットアップが完了しました。
-              <br />
-              次のタスクでAPI Routesとデータ統合を実装します。
-            </p>
-          </div>
-        </div>
-      </main>
-    </div>
+    <Dashboard
+      initialData={initialData?.data}
+      initialLastUpdate={initialData?.lastUpdate}
+    />
   );
 }

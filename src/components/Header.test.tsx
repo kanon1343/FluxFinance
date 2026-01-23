@@ -1,5 +1,6 @@
 import { render, screen } from "@testing-library/react";
-import { describe, it, expect } from "vitest";
+import userEvent from "@testing-library/user-event";
+import { describe, expect, it, vi } from "vitest";
 import { Header } from "./Header";
 
 describe("Header", () => {
@@ -26,5 +27,37 @@ describe("Header", () => {
     render(<Header lastUpdate={testDate} />);
     const timeElement = screen.getByRole("time");
     expect(timeElement).toHaveAttribute("dateTime", testDate.toISOString());
+  });
+
+  it("onRefreshが渡された場合、リフレッシュボタンを表示する", () => {
+    const onRefresh = vi.fn();
+    render(<Header onRefresh={onRefresh} />);
+    expect(
+      screen.getByRole("button", { name: "データを更新" })
+    ).toBeInTheDocument();
+  });
+
+  it("onRefreshが渡されない場合、リフレッシュボタンを表示しない", () => {
+    render(<Header />);
+    expect(
+      screen.queryByRole("button", { name: "データを更新" })
+    ).not.toBeInTheDocument();
+  });
+
+  it("リフレッシュボタンをクリックするとonRefreshが呼ばれる", async () => {
+    const user = userEvent.setup();
+    const onRefresh = vi.fn();
+    render(<Header onRefresh={onRefresh} />);
+
+    await user.click(screen.getByRole("button", { name: "データを更新" }));
+    expect(onRefresh).toHaveBeenCalledTimes(1);
+  });
+
+  it("isRefreshingがtrueの場合、リフレッシュボタンが無効化される", () => {
+    const onRefresh = vi.fn();
+    render(<Header onRefresh={onRefresh} isRefreshing={true} />);
+
+    const button = screen.getByRole("button", { name: "データを更新" });
+    expect(button).toBeDisabled();
   });
 });

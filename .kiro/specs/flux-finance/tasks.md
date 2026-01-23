@@ -74,9 +74,9 @@ FluxFinance ダッシュボードを Next.js App Router、TypeScript、Tailwind 
     - リアルタイム更新対応
     - _Requirements: 4.3_
 
-- [ ] 5. チャート機能の実装
+- [x] 5. チャート機能の実装
 
-  - [ ] 5.1 PriceChart コンポーネントの実装
+  - [x] 5.1 PriceChart コンポーネントの実装
 
     - Recharts を使用したラインチャート実装
     - キャンドルスティックチャート対応
@@ -89,7 +89,7 @@ FluxFinance ダッシュボードを Next.js App Router、TypeScript、Tailwind 
     - **Property 10: Mobile Chart Optimization**
     - **Validates: Requirements 2.1, 2.3, 5.4**
 
-  - [ ] 5.3 ChartModal コンポーネントの実装
+  - [x] 5.3 ChartModal コンポーネントの実装
 
     - 詳細チャート表示モーダル
     - 時間軸選択ボタン（1D, 1W, 1M, 3M）
@@ -101,9 +101,9 @@ FluxFinance ダッシュボードを Next.js App Router、TypeScript、Tailwind 
     - **Property 7: Time Period Selection Behavior**
     - **Validates: Requirements 2.4, 3.2, 3.3**
 
-- [ ] 6. データフェッチングとキャッシュの実装
+- [x] 6. データフェッチングとキャッシュの実装
 
-  - [ ] 6.1 SWR フックとデータフェッチング戦略
+  - [x] 6.1 SWR フックとデータフェッチング戦略
 
     - カスタム SWR フックの作成
     - キャッシュ設定と revalidation 戦略
@@ -116,7 +116,7 @@ FluxFinance ダッシュボードを Next.js App Router、TypeScript、Tailwind 
     - **Property 12: Caching Behavior**
     - **Validates: Requirements 4.2, 4.3, 4.4, 6.3**
 
-  - [ ] 6.3 リフレッシュボタンと自動更新機能
+  - [x] 6.3 リフレッシュボタンと自動更新機能
     - 手動リフレッシュボタンの実装
     - 自動更新インターバル設定
     - ローディング状態の表示
