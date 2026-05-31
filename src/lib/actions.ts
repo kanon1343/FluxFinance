@@ -2,7 +2,10 @@
 
 import { DEFAULT_TICKERS } from '@/constants';
 import type { ChartDataPoint, StockData, TimeRange } from '@/types';
-import yahooFinance from 'yahoo-finance2';
+import yahooFinanceModule from 'yahoo-finance2';
+
+const YahooFinance = yahooFinanceModule;
+const yahooFinance = new YahooFinance({ suppressNotices: ['yahooSurvey'] });
 
 // Yahoo Finance APIの型定義
 interface YahooQuote {

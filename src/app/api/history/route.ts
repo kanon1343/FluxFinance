@@ -96,7 +96,7 @@ export async function GET(request: NextRequest) {
     const { period1, interval } = getYahooFinanceParams(range);
     const yahooFinanceModule = await import("yahoo-finance2");
     const YahooFinance = yahooFinanceModule.default;
-    const yahooFinance = new YahooFinance();
+    const yahooFinance = new YahooFinance({ suppressNotices: ['yahooSurvey'] });
 
     const result = (await yahooFinance.historical(ticker, {
       period1,

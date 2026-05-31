@@ -55,7 +55,8 @@ async function fetchStockData(
 export async function GET(request: NextRequest) {
   try {
     const yahooFinanceModule = await import("yahoo-finance2");
-    const yahooFinance = yahooFinanceModule.default;
+    const YahooFinance = yahooFinanceModule.default;
+    const yahooFinance = new YahooFinance({ suppressNotices: ['yahooSurvey'] });
 
     const { searchParams } = new URL(request.url);
     const tickersParam = searchParams.get("tickers");

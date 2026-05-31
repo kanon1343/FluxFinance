@@ -1,4 +1,8 @@
+import * as path from "node:path";
 import { defineConfig, devices } from "@playwright/test";
+
+// Load .env file for test environment variables (e.g., OLLAMA_MODEL)
+process.loadEnvFile(path.resolve(__dirname, ".env"));
 
 export default defineConfig({
   testDir: "./e2e",
@@ -18,7 +22,7 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: "npm run dev",
+    command: "pnpm dev",
     url: "http://localhost:3000",
     reuseExistingServer: !process.env.CI,
   },

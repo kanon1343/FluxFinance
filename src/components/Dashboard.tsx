@@ -25,7 +25,7 @@ export function Dashboard({ initialData, initialLastUpdate }: DashboardProps) {
             lastUpdate: initialLastUpdate ?? new Date().toISOString(),
           }
         : undefined,
-    [initialData, initialLastUpdate]
+    [initialData, initialLastUpdate],
   );
 
   const { stocks, lastUpdate, isLoading, isValidating, error, refresh } =
@@ -58,7 +58,7 @@ export function Dashboard({ initialData, initialLastUpdate }: DashboardProps) {
         changePercent: stock.changePercent,
         currency: stock.currency,
       })),
-    [stocks]
+    [stocks],
   );
 
   return (
@@ -71,16 +71,16 @@ export function Dashboard({ initialData, initialLastUpdate }: DashboardProps) {
 
       {tickerItems.length > 0 && <MarketTicker items={tickerItems} />}
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <main className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-6">
         {error && (
-          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+          <div className="mb-4 sm:mb-6 p-3 sm:p-4 bg-red-50 border border-red-200 rounded-lg">
             <p className="text-red-700 text-sm">
               データの取得に失敗しました: {error.message}
             </p>
             <button
               type="button"
               onClick={handleRefresh}
-              className="mt-2 text-sm text-red-600 hover:text-red-800 underline"
+              className="mt-2 text-sm text-red-600 hover:text-red-800 underline active:text-red-900 touch-manipulation"
             >
               再試行
             </button>
@@ -88,14 +88,16 @@ export function Dashboard({ initialData, initialLastUpdate }: DashboardProps) {
         )}
 
         {isLoading && stocks.length === 0 ? (
-          <div className="flex items-center justify-center py-12">
+          <div className="flex items-center justify-center py-8 sm:py-12">
             <div className="flex flex-col items-center gap-3">
               <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
-              <p className="text-gray-500">データを読み込み中...</p>
+              <p className="text-gray-500 text-sm sm:text-base">
+                データを読み込み中...
+              </p>
             </div>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 lg:gap-5">
             {stocks.map((stock) => (
               <StockCard
                 key={stock.ticker}

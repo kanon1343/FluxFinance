@@ -36,7 +36,7 @@ interface UseMarketDataReturn {
  */
 export function useMarketData(
   tickers?: string[],
-  options: UseMarketDataOptions = {}
+  options: UseMarketDataOptions = {},
 ): UseMarketDataReturn {
   const { refreshInterval = 30000, fallbackData } = options;
 
@@ -54,6 +54,10 @@ export function useMarketData(
       fallbackData,
       errorRetryCount: 3,
       errorRetryInterval: 5000,
+      // Performance optimizations
+      revalidateIfStale: true,
+      revalidateOnMount: !fallbackData,
+      keepPreviousData: true,
     });
 
   return {

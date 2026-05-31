@@ -50,13 +50,15 @@ export function MarketTicker({ items, speed = 30 }: MarketTickerProps) {
     return (
       <li
         key={`${item.symbol}-${index}`}
-        className="inline-flex items-center mx-6"
+        className="inline-flex items-center mx-3 sm:mx-6"
       >
-        <span className="font-medium text-white mr-2">{item.displayName}</span>
-        <span className="text-gray-300 mr-2">
+        <span className="font-medium text-white mr-1 sm:mr-2 text-sm sm:text-base">
+          {item.displayName}
+        </span>
+        <span className="text-gray-300 mr-1 sm:mr-2 text-sm sm:text-base">
           {formatPrice(item.price, item.currency)}
         </span>
-        <span className={`font-medium ${changeColor}`}>
+        <span className={`font-medium ${changeColor} text-sm sm:text-base`}>
           {formatChangePercent(item.changePercent)}
         </span>
       </li>
@@ -68,7 +70,7 @@ export function MarketTicker({ items, speed = 30 }: MarketTickerProps) {
   return (
     <div
       ref={containerRef}
-      className="bg-gray-900 py-2 overflow-hidden whitespace-nowrap"
+      className="bg-gray-900 py-1.5 sm:py-2 overflow-hidden whitespace-nowrap"
     >
       <ul
         ref={contentRef}

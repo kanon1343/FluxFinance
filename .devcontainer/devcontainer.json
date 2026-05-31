@@ -1,0 +1,21 @@
+{
+  "name": "FluxFinance Dev",
+  "image": "mcr.microsoft.com/playwright:v1.52.0-noble",
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": { "version": "24" }
+  },
+  "forwardPorts": [3000],
+  "postCreateCommand": "npm install -g pnpm && pnpm install && npx playwright install --with-deps chromium",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-playwright.playwright",
+        "biomejs.biome"
+      ]
+    }
+  },
+  "remoteEnv": {
+    "OLLAMA_MODEL": "${localEnv:OLLAMA_MODEL}",
+    "OLLAMA_HOST": "${localEnv:OLLAMA_HOST}"
+  }
+}
