@@ -1,11 +1,35 @@
 {
   "name": "FluxFinance Dev",
-  "image": "mcr.microsoft.com/playwright:v1.52.0-noble",
+  "build": { "dockerfile": "Dockerfile" },
+  "remoteUser": "pwuser",
   "features": {
-    "ghcr.io/devcontainers/features/node:1": { "version": "24" }
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "24",
+      "pnpmVersion": "12.14.0"
+    },
+    "ghcr.io/anthropics/devcontainer-features/claude-code:1.0": {}
   },
   "forwardPorts": [3000],
-  "postCreateCommand": "npm install -g pnpm && pnpm install && npx playwright install --with-deps chromium",
+  // ファイアウォール（iptables）用。pwuser 自身は capability を使えず、sudo で許可した firewall スクリプトだけが使う
+  "runArgs": ["--cap-add=NET_ADMIN", "--cap-add=NET_RAW"],
+  "postCreateCommand": "pnpm install && pnpm exec playwright install chromium",
+  "postStartCommand": "sudo /usr/local/bin/fluxfinance-firewall.sh",
+  "mounts": [
+    "source=claude-code-config-${devcontainerId},target=/home/pwuser/.claude,type=volume",
+    // Mac 側で実行・読み込みされるファイルは、コンテナ内からは読み取り専用にする
+    "source=${localWorkspaceFolder}/.git/hooks,target=${containerWorkspaceFolder}/.git/hooks,type=bind,readonly",
+    "source=${localWorkspaceFolder}/.git/config,target=${containerWorkspaceFolder}/.git/config,type=bind,readonly",
+    "source=${localWorkspaceFolder}/.devcontainer,target=${containerWorkspaceFolder}/.devcontainer,type=bind,readonly",
+    "source=${localWorkspaceFolder}/.claude/settings.json,target=${containerWorkspaceFolder}/.claude/settings.json,type=bind,readonly",
+    "source=${localWorkspaceFolder}/.claude/hooks,target=${containerWorkspaceFolder}/.claude/hooks,type=bind,readonly"
+  ],
+  "containerEnv": {
+    "CLAUDE_CONFIG_DIR": "/home/pwuser/.claude",
+    // 許可リストにない送信先（テレメトリ、claude.ai コネクタのプロキシ）への通信を最初から行わない
+    "DISABLE_TELEMETRY": "1",
+    "DISABLE_ERROR_REPORTING": "1",
+    "ENABLE_CLAUDEAI_MCP_SERVERS": "false"
+  },
   "customizations": {
     "vscode": {
       "extensions": [
@@ -13,9 +37,5 @@
         "biomejs.biome"
       ]
     }
-  },
-  "remoteEnv": {
-    "OLLAMA_MODEL": "${localEnv:OLLAMA_MODEL}",
-    "OLLAMA_HOST": "${localEnv:OLLAMA_HOST}"
   }
 }

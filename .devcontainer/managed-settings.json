@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "disableBypassPermissionsMode": "disable",
+    "deny": [
+      "Edit(**/.git/**)",
+      "Edit(**/.devcontainer/**)",
+      "Edit(**/.vscode/**)",
+      "Edit(**/.claude/settings.json)",
+      "Edit(**/.claude/hooks/**)",
+      "Edit(**/.envrc)"
+    ]
+  }
+}

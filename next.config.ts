@@ -1,36 +1,30 @@
 import type { NextConfig } from "next";
 
+const securityHeaders = [
+  { key: "X-Content-Type-Options", value: "nosniff" },
+  { key: "X-Frame-Options", value: "DENY" },
+  { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+  {
+    key: "Permissions-Policy",
+    value: "camera=(), microphone=(), geolocation=()",
+  },
+];
+
 const nextConfig: NextConfig = {
+  // X-Powered-By: Next.js ヘッダーでフレームワーク情報を公開しない
+  poweredByHeader: false,
+
   // Performance optimizations
   experimental: {
-    optimizePackageImports: ["recharts", "lucide-react"],
+    optimizePackageImports: ["recharts"],
   },
 
-  // Image optimization
-  images: {
-    formats: ["image/webp", "image/avif"],
-    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
-    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-  },
-
-  // Compression
-  compress: true,
-
-  // Bundle analyzer (only in development)
-  ...(process.env.ANALYZE === "true" && {
-    webpack: (config: any) => {
-      config.plugins.push(
-        new (require("@next/bundle-analyzer")({
-          enabled: true,
-        }))(),
-      );
-      return config;
-    },
-  }),
-
-  // Headers for caching
   async headers() {
     return [
+      {
+        source: "/:path*",
+        headers: securityHeaders,
+      },
       {
         source: "/_next/static/:path*",
         headers: [

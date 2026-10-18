@@ -41,9 +41,19 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# Monkey test reports
+# Test reports
 e2e/reports/*.json
 e2e/reports/*.md
 
 # pnpm
 .pnpm-store
+
+# Playwright
+/playwright-report/
+/test-results/
+
+# Claude Code (personal)
+.claude/settings.local.json
+
+# Claude の探索的テスト用（一時ファイル）
+/e2e/explore/

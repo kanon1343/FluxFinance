@@ -26,8 +26,8 @@
 ## 3. 開発ガイドライン
 - パッケージ管理のコマンドにはすべて `pnpm` を使用すること（例: `pnpm install`, `pnpm dev`, `pnpm add`）。
 - コードが Biome のフォーマットおよび lint ルールを通過することを確認すること。コード変更時は `biome format` および `biome lint` を使用する。
-- Playwright を使用した E2E テストについては、`playwright.config.ts` の既存の設定を参照すること。AI ベースの探索的テスト（モンキーテスト）が必要な場合は、ローカルの Ollama モデルと `.agent/skills/ollama-monkey-testing/SKILL.md` のアプローチを活用すること。
-- DevContainer やネットワーク（特に LLM/Ollama 統合に関する部分）を設定する際は、ネットワーク隔離ルール（ローカルホスト通信のみに制限するなど）が遵守されるようにすること。
+- Playwright を使用した E2E テストについては、`playwright.config.ts` の既存の設定を参照すること。探索的テスト（モンキーテスト）は Claude Code の `monkey-test` skill で行う。
+- DevContainer やネットワークを設定する際は、ネットワーク隔離ルール（ローカルホスト通信のみに制限するなど）が遵守されるようにすること。
 
 ## 4. ドキュメント
 - 新しいコア依存関係や環境設定が導入された場合は、`README.md` を更新すること。

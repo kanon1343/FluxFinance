@@ -1,8 +1,4 @@
-import * as path from "node:path";
 import { defineConfig, devices } from "@playwright/test";
-
-// Load .env file for test environment variables (e.g., OLLAMA_MODEL)
-process.loadEnvFile(path.resolve(__dirname, ".env"));
 
 export default defineConfig({
   testDir: "./e2e",
