@@ -13,6 +13,8 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
+      // server-only は Next.js のビルド時だけ意味を持つため、テストでは空モジュールに差し替える
+      "server-only": path.resolve(__dirname, "./vitest.server-only.ts"),
     },
   },
 });

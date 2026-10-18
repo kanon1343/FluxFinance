@@ -1,98 +1,39 @@
-import { DEFAULT_TICKERS } from "@/constants";
-import type { StockData } from "@/types";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
+import { DEFAULT_TICKERS } from "@/constants";
+import { fetchQuotes } from "@/lib/market-data";
+import { isStockDataError } from "@/lib/utils";
+import type { MarketResponse } from "@/types";
 
-interface MarketResponse {
-  data: StockData[];
-  lastUpdate: string;
-  error?: string;
-}
+const MAX_TICKERS = 20;
+const TICKER_PATTERN = /^[A-Z0-9^.=-]{1,15}$/i;
 
-interface YahooQuoteResult {
-  regularMarketPrice?: number;
-  regularMarketPreviousClose?: number;
-  currency?: string;
-}
-
-async function fetchStockData(
-  yahooFinance: { quote: (ticker: string) => Promise<YahooQuoteResult> },
-  ticker: string
-): Promise<StockData> {
-  try {
-    const quote = await yahooFinance.quote(ticker.trim());
-
-    if (!quote || typeof quote.regularMarketPrice !== "number") {
-      throw new Error(`Invalid data for ticker ${ticker}`);
-    }
-
-    const currentPrice = quote.regularMarketPrice;
-    const previousClose = quote.regularMarketPreviousClose ?? currentPrice;
-    const change = currentPrice - previousClose;
-    const changePercent =
-      previousClose !== 0 ? (change / previousClose) * 100 : 0;
-
-    return {
-      ticker: ticker.trim(),
-      currentPrice,
-      previousClose,
-      change,
-      changePercent,
-      currency: quote.currency ?? "USD",
-    };
-  } catch {
-    return {
-      ticker: ticker.trim(),
-      currentPrice: 0,
-      previousClose: 0,
-      change: 0,
-      changePercent: 0,
-      currency: "USD",
-    };
+function parseTickers(param: string | null): string[] {
+  if (!param) {
+    return [...DEFAULT_TICKERS];
   }
+  const tickers = param
+    .split(",")
+    .map((ticker) => ticker.trim())
+    .filter((ticker) => TICKER_PATTERN.test(ticker));
+  return [...new Set(tickers)].slice(0, MAX_TICKERS);
 }
 
 export async function GET(request: NextRequest) {
-  try {
-    const yahooFinanceModule = await import("yahoo-finance2");
-    const YahooFinance = yahooFinanceModule.default;
-    const yahooFinance = new YahooFinance({ suppressNotices: ['yahooSurvey'] });
+  const tickers = parseTickers(request.nextUrl.searchParams.get("tickers"));
+  const data = await fetchQuotes(tickers);
 
-    const { searchParams } = new URL(request.url);
-    const tickersParam = searchParams.get("tickers");
-    const tickers = tickersParam
-      ? tickersParam.split(",")
-      : [...DEFAULT_TICKERS];
+  const response: MarketResponse = {
+    data,
+    lastUpdate: new Date().toISOString(),
+  };
 
-    const stockDataPromises = tickers.map((ticker) =>
-      fetchStockData(yahooFinance, ticker)
-    );
+  // 失敗した銘柄を含む応答はキャッシュせず、次のリクエストで取り直す
+  const cacheControl = data.some(isStockDataError)
+    ? "no-store"
+    : "public, s-maxage=30, stale-while-revalidate=60";
 
-    const stockData = await Promise.all(stockDataPromises);
-
-    const response: MarketResponse = {
-      data: stockData,
-      lastUpdate: new Date().toISOString(),
-    };
-
-    return NextResponse.json(response, {
-      headers: {
-        "Cache-Control": "public, s-maxage=30, stale-while-revalidate=60",
-        "Content-Type": "application/json",
-      },
-    });
-  } catch (error) {
-    const errorResponse: MarketResponse = {
-      data: [],
-      lastUpdate: new Date().toISOString(),
-      error: error instanceof Error ? error.message : "Unknown error occurred",
-    };
-
-    return NextResponse.json(errorResponse, {
-      status: 500,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-  }
+  return NextResponse.json(response, {
+    headers: { "Cache-Control": cacheControl },
+  });
 }

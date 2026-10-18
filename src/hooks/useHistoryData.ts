@@ -1,15 +1,8 @@
 "use client";
 
 import { fetcher } from "@/lib/fetcher";
-import type { ChartDataPoint, TimeRange } from "@/types";
+import type { ChartDataPoint, HistoryResponse, TimeRange } from "@/types";
 import useSWR from "swr";
-
-interface HistoryResponse {
-  ticker: string;
-  data: ChartDataPoint[];
-  range: TimeRange;
-  error?: string;
-}
 
 interface UseHistoryDataReturn {
   chartData: ChartDataPoint[];

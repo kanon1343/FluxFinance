@@ -1,14 +1,8 @@
 "use client";
 
 import { fetcher } from "@/lib/fetcher";
-import type { StockData } from "@/types";
+import type { MarketResponse, StockResult } from "@/types";
 import useSWR from "swr";
-
-interface MarketResponse {
-  data: StockData[];
-  lastUpdate: string;
-  error?: string;
-}
 
 interface UseMarketDataOptions {
   refreshInterval?: number;
@@ -16,7 +10,7 @@ interface UseMarketDataOptions {
 }
 
 interface UseMarketDataReturn {
-  stocks: StockData[];
+  stocks: StockResult[];
   lastUpdate: Date | null;
   isLoading: boolean;
   isValidating: boolean;

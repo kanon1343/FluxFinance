@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { Dashboard } from "@/components";
 import { DEFAULT_TICKERS } from "@/constants";
-import type { StockData } from "@/types";
+import { fetchQuotes } from "@/lib/market-data";
 
 export const metadata: Metadata = {
   title: "FluxFinance - 株価監視ダッシュボード",
@@ -25,48 +25,16 @@ export const metadata: Metadata = {
   },
 };
 
-interface MarketResponse {
-  data: StockData[];
-  lastUpdate: string;
-  error?: string;
-}
-
-async function getInitialMarketData(): Promise<MarketResponse | null> {
-  try {
-    const baseUrl = process.env.VERCEL_URL
-      ? `https://${process.env.VERCEL_URL}`
-      : "http://localhost:3000";
-
-    const response = await fetch(
-      `${baseUrl}/api/market?tickers=${DEFAULT_TICKERS.join(",")}`,
-      {
-        next: {
-          revalidate: 30,
-          tags: ["market-data"],
-        },
-        headers: {
-          "Cache-Control": "public, s-maxage=30, stale-while-revalidate=60",
-        },
-      },
-    );
-
-    if (!response.ok) {
-      return null;
-    }
-
-    return response.json();
-  } catch {
-    return null;
-  }
-}
+// 価格は 30 秒ごとに再生成する（以降はクライアントの SWR が更新する）
+export const revalidate = 30;
 
 export default async function Home() {
-  const initialData = await getInitialMarketData();
+  const initialData = await fetchQuotes(DEFAULT_TICKERS);
 
   return (
     <Dashboard
-      initialData={initialData?.data}
-      initialLastUpdate={initialData?.lastUpdate}
+      initialData={initialData}
+      initialLastUpdate={new Date().toISOString()}
     />
   );
 }

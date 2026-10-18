@@ -1,14 +1,7 @@
 "use client";
 
-import type { ChartDataPoint, TimeRange } from "@/types";
+import type { ChartDataPoint, HistoryResponse, TimeRange } from "@/types";
 import { useCallback, useState } from "react";
-
-interface HistoryResponse {
-  ticker: string;
-  data: ChartDataPoint[];
-  range: TimeRange;
-  error?: string;
-}
 
 interface UseChartDataReturn {
   chartData: ChartDataPoint[];

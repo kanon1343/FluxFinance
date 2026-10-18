@@ -5,6 +5,7 @@ import {
   formatChangePercent,
   formatPrice,
   getTickerDisplayName,
+  isStockDataError,
 } from "./utils";
 
 describe("formatPrice", () => {
@@ -82,5 +83,24 @@ describe("cn", () => {
 
   it("Tailwindの競合を解決する", () => {
     expect(cn("px-2", "px-4")).toBe("px-4");
+  });
+});
+
+describe("isStockDataError", () => {
+  it("error を持つ結果を失敗と判定する", () => {
+    expect(isStockDataError({ ticker: "GRRR", error: "failed" })).toBe(true);
+  });
+
+  it("価格を持つ結果は失敗と判定しない", () => {
+    expect(
+      isStockDataError({
+        ticker: "GRRR",
+        currentPrice: 1,
+        previousClose: 1,
+        change: 0,
+        changePercent: 0,
+        currency: "USD",
+      }),
+    ).toBe(false);
   });
 });

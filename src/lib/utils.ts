@@ -1,5 +1,6 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
+import type { StockDataError, StockResult } from "@/types";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -46,4 +47,10 @@ export function getTickerDisplayName(ticker: string): string {
     "JPY=X": "USD/JPY",
   };
   return names[ticker] || ticker;
+}
+
+export function isStockDataError(
+  result: StockResult,
+): result is StockDataError {
+  return "error" in result;
 }

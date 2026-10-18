@@ -1,7 +1,7 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
 import { StockCard } from "./StockCard";
-import type { StockData } from "@/types";
+import type { StockData, StockDataError } from "@/types";
 
 const mockPositiveStock: StockData = {
   ticker: "GRRR",
@@ -87,5 +87,30 @@ describe("StockCard", () => {
     const button = screen.getByRole("button");
     expect(button).toHaveAttribute("aria-label");
     expect(button.getAttribute("aria-label")).toContain("GRRR");
+  });
+});
+
+describe("StockCard（取得失敗）", () => {
+  const errorStock: StockDataError = {
+    ticker: "^N225",
+    error: "Quote not found",
+  };
+
+  it("エラー状態を表示し、価格は表示しない", () => {
+    render(<StockCard stock={errorStock} />);
+    expect(
+      screen.getByRole("heading", { name: "日経平均" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("価格を取得できませんでした")).toBeInTheDocument();
+    expect(screen.getByText("Quote not found")).toBeInTheDocument();
+    expect(screen.queryByText(/[$¥]/)).not.toBeInTheDocument();
+  });
+
+  it("クリックできるボタンにしない", () => {
+    render(<StockCard stock={errorStock} />);
+    expect(screen.queryByRole("button")).not.toBeInTheDocument();
+    expect(
+      screen.getByRole("article", { name: "日経平均の価格を取得できませんでした" }),
+    ).toBeInTheDocument();
   });
 });

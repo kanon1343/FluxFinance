@@ -8,6 +8,28 @@ export interface StockData {
   lastUpdate?: Date;
 }
 
+/** 価格を取得できなかった銘柄の結果 */
+export interface StockDataError {
+  ticker: string;
+  error: string;
+}
+
+/** 銘柄ごとの取得結果。失敗した銘柄は価格を持たず `error` を持つ */
+export type StockResult = StockData | StockDataError;
+
+export interface MarketResponse {
+  data: StockResult[];
+  lastUpdate: string;
+  error?: string;
+}
+
+export interface HistoryResponse {
+  ticker: string;
+  data: ChartDataPoint[];
+  range: TimeRange;
+  error?: string;
+}
+
 export interface TickerItem {
   symbol: string;
   displayName: string;

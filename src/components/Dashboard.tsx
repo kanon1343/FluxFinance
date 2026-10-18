@@ -2,14 +2,15 @@
 
 import { useCallback, useMemo, useState } from "react";
 import { useMarketData } from "@/hooks";
-import type { StockData } from "@/types";
+import { isStockDataError } from "@/lib/utils";
+import type { StockData, StockResult } from "@/types";
 import { ChartModal } from "./ChartModal";
 import { Header } from "./Header";
 import { MarketTicker } from "./MarketTicker";
 import { StockCard } from "./StockCard";
 
 interface DashboardProps {
-  initialData?: StockData[];
+  initialData?: StockResult[];
   initialLastUpdate?: string;
 }
 
@@ -50,14 +51,16 @@ export function Dashboard({ initialData, initialLastUpdate }: DashboardProps) {
 
   const tickerItems = useMemo(
     () =>
-      stocks.map((stock) => ({
-        symbol: stock.ticker,
-        displayName: stock.ticker,
-        price: stock.currentPrice,
-        change: stock.change,
-        changePercent: stock.changePercent,
-        currency: stock.currency,
-      })),
+      stocks
+        .filter((stock): stock is StockData => !isStockDataError(stock))
+        .map((stock) => ({
+          symbol: stock.ticker,
+          displayName: stock.ticker,
+          price: stock.currentPrice,
+          change: stock.change,
+          changePercent: stock.changePercent,
+          currency: stock.currency,
+        })),
     [stocks],
   );
 
@@ -102,7 +105,11 @@ export function Dashboard({ initialData, initialLastUpdate }: DashboardProps) {
               <StockCard
                 key={stock.ticker}
                 stock={stock}
-                onClick={() => handleStockClick(stock)}
+                onClick={
+                  isStockDataError(stock)
+                    ? undefined
+                    : () => handleStockClick(stock)
+                }
               />
             ))}
           </div>
